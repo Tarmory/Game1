@@ -21,7 +21,7 @@ struct loca
 
 
 };
-
+//
 struct player
 {
     int loc;
