@@ -18,6 +18,7 @@ struct door
     int target;
     bool open;
     items reqItem;
+     
 
 };
 struct loca
