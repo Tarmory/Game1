@@ -4,9 +4,12 @@
 #include <iostream>
 #include<ctime>
 #include<vector>
+#include <random>
 using namespace std;
 
-enum class items {
+
+enum class items 
+{
     coin, key, rock, bottle, axe
 };
 
@@ -33,7 +36,6 @@ struct loca
 struct player
 {
     int loc;
-    
     vector <items> things;
 };
 
@@ -70,7 +72,21 @@ void openDoor(items item)
 int main()
 {
     player1.loc = 1;
-    palyer
+
+    random_device random_device;
+    mt19937 generator(random_device());
+    uniform_int_distribution<> atk(10, 45);
+    uniform_int_distribution<> hp(100, 500);
+    int atkP1 = atk(generator);
+    int hpEn1 = hp(generator);
+    
+    int en1hp = hpEn1;
+    int en1atk = 10;
+    
+    int p1hp = 100;
+    int p1atk = atkP1;
+
+
     
     place[0].name = "town";
     place[0].descrip = " - big town ";
@@ -114,15 +130,18 @@ int main()
 
         system("cls");
 
-        if (input == "go") {
-            for (int i = 0; i < place[player1.loc].portal.size(); i++) {
+        if (input == "go")
+        {
+            for (int i = 0; i < place[player1.loc].portal.size(); i++)
+            {
                 int destLoc = place[player1.loc].portal[i].target;
                 cout << i << " " << place[destLoc].name << "\n";
+
             }
 
             int choice;
             cin >> choice;
-            //рр
+
             system("cls");
 
             if (choice >= place[player1.loc].portal.size())
@@ -134,10 +153,13 @@ int main()
             {
                 auto& selectedDoor = place[player1.loc].portal[choice];
 
-                if (!selectedDoor.open) {
+                if (!selectedDoor.open)
+                {
                     bool hasRequiredItem = false;
-                    for (auto item : player1.things) {
-                        if (item == selectedDoor.reqItem) {
+                    for (auto item : player1.things)
+                    {
+                        if (item == selectedDoor.reqItem)
+                        {
                             hasRequiredItem = true;
                             break;
                         }
@@ -148,11 +170,13 @@ int main()
                         player1.loc = selectedDoor.target;
                         cout << "You opened the door\n";
                     }
-                    else {
+                    else
+                    {
                         cout << "You need a key\n";
                     }
                 }
-                else {
+                else
+                {
                     player1.loc = selectedDoor.target;
                 }
             }
@@ -169,7 +193,6 @@ int main()
                 auto itemID = player1.things[usabale];
                 openDoor(itemID);
             }
-
             else
             {
                 cout << "Selected item invalid\n";
@@ -196,6 +219,7 @@ int main()
 
         if (input == "pick")
         {
+            inventory();
             cout << ("write items number for pick") << "\n";
             int in;
             cin >> in;
@@ -209,13 +233,15 @@ int main()
                 player1.things.push_back(thing);
                 place[location_num].things.erase(place[location_num].things.begin() + in);
             }
+        
+            else
+            {
+                cout << "Error\n";
+            }
         }
-
-
-
-
-
-
-
+       
     }
-}
+} 
+
+// check how work comands
+// logic fight with npc
