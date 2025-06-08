@@ -1,4 +1,4 @@
-// ConsoleApplication1.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// ConsoleApplication1.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
@@ -17,7 +17,7 @@ struct door
 {
     int target;
     bool open;
-    int itemToOpen;
+    items reqItem;
 
 };
 struct loca
@@ -32,7 +32,7 @@ struct loca
 struct player
 {
     int loc;
-
+    
     vector <items> things;
 };
 
@@ -50,12 +50,27 @@ void inventory()
     }
     cout << "\n";
 }
+void openDoor(items item)
+{
+    for (loca& location : place)
+    {
+        for (door& currentDoor : location.portal)
+        {
+            if (currentDoor.reqItem == item)
+            {
+                currentDoor.open = true;
+                cout << "Opened door leading to loc " << place[currentDoor.target].name << "!\n";
+            }
+        }
+    }
+}
 
 
 int main()
 {
     player1.loc = 1;
-
+    palyer
+    
     place[0].name = "town";
     place[0].descrip = " - big town ";
     place[0].things.push_back(items::coin);
@@ -64,6 +79,9 @@ int main()
     d1.target = 1;
     d0.target = 0;
     d2.target = 2;
+    d0.reqItem = items::key;
+    d2.reqItem = items::key;
+    
     place[0].portal.push_back(d1);
 
     place[1].name = "forest";
@@ -79,6 +97,9 @@ int main()
     place[2].things.push_back(items::bottle);
     place[2].portal.push_back(d1);
 
+    //player1.things.push_back(items::key);
+    //player1.things.push_back(items::bottle);
+
 
     while (true)
     {
@@ -92,65 +113,69 @@ int main()
 
         system("cls");
 
-
-     
-
-        if (input == "go")
-        {
-            for (int i = 0; i < place[player1.loc].portal.size(); i++)
-            {
-                int location_num = player1.loc;
-                auto location = place[location_num];
-                auto door = location.portal;
-                int dest_loc = door[i].target;
-
-                cout << i << " " << place[dest_loc].name << "\n";
+        if (input == "go") {
+            for (int i = 0; i < place[player1.loc].portal.size(); i++) {
+                int destLoc = place[player1.loc].portal[i].target;
+                cout << i << " " << place[destLoc].name << "\n";
             }
 
-            int in;
-            cin >> in;
-
+            int choice;
+            cin >> choice;
+            //рр
             system("cls");
-          
-            if (in >= place[player1.loc].portal.size())
+
+            if (choice >= place[player1.loc].portal.size())
             {
-                cout << "error, invalid number";
+                cout << "Error: Invalid number!\n";
             }
+
             else
             {
-                int location_num = player1.loc;
-                auto location = place[location_num];
-                auto door = location.portal;
+                auto& selectedDoor = place[player1.loc].portal[choice];
 
+                if (!selectedDoor.open) {
+                    bool hasRequiredItem = false;
+                    for (auto item : player1.things) {
+                        if (item == selectedDoor.reqItem) {
+                            hasRequiredItem = true;
+                            break;
+                        }
+                    }
 
-                if (door[in].open)
-                {
-                    player1.loc = door[in].target;
+                    if (hasRequiredItem) {
+                        selectedDoor.open = true;
+                        player1.loc = selectedDoor.target;
+                        cout << "You opened the door\n";
+                    }
+                    else {
+                        cout << "You need a key\n";
+                    }
                 }
-                else
-                {
-                    cout << "Door closed\n";
+                else {
+                    player1.loc = selectedDoor.target;
                 }
-
             }
-
         }
         if (input == "use")
         {
-            int usabale;
             inventory();
             cout << "Choose item number";
+            int usabale;
             cin >> usabale;
-            //validation
-            auto itemID = player1.things[usabale];
-            if (itemID == items::key)
-            {
 
+            if (usabale >= 0 && usabale < player1.things.size())
+            {
+                auto itemID = player1.things[usabale];
+                openDoor(itemID);
+            }
+
+            else
+            {
+                cout << "Selected item invalid\n";
             }
 
         }
 
-        
         if (input == "items")
         {
             for (int i = 0; i < place[player1.loc].things.size(); i++)
@@ -184,8 +209,8 @@ int main()
                 place[location_num].things.erase(place[location_num].things.begin() + in);
             }
         }
-        
-        
+
+
 
 
 
