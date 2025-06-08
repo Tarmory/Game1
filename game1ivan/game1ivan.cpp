@@ -85,8 +85,9 @@ int main()
     
     int p1hp = 100;
     int p1atk = atkP1;
-
-
+   
+    srand(time(0));
+    int t = rand() % 10;
     
     place[0].name = "town";
     place[0].descrip = " - big town ";
